@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Donation Requests</title>
+  <link rel="stylesheet" href="denapp.css">
+</head>
+<body>
+  <h1>Blood Donation Requests</h1>
+
+  <div class="list-container">
+    <!-- Recent Requests Table -->
+    <h2>Recent Requests</h2>
+    <table id="requestList">
+      <thead>
+        <tr>
+          <th>Recipient</th>
+          <th>Blood Type</th>
+          <th>Units Needed</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data will be dynamically populated here -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Denied Requests Table -->
+  <div class="list-container">
+    <h2>Denied Requests</h2>
+    <table id="deniedRequests">
+      <thead>
+        <tr>
+          <th>Recipient</th>
+          <th>Blood Type</th>
+          <th>Units Needed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Denied requests will be added here -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Approved Requests Table -->
+  <div class="list-container">
+    <h2>Approved Requests</h2>
+    <table id="approvedRequests">
+      <thead>
+        <tr>
+          <th>Recipient</th>
+          <th>Blood Type</th>
+          <th>Units Needed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Approved requests will be added here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="load.js"></script>
+  <script src="deni.js"></script>
+  <script src="kubali.js"></script>
+</body>
+</html>

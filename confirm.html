@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmed Discarded Donations</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header, footer {
+            background-color: #d32f2f;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+        h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        p {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            max-width: 1000px;
+            border-collapse: collapse;
+            margin: 20px;
+            overflow-x: auto;
+            display: block;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f44336;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        footer p {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #d32f2f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background-color: #b71c1c;
+        }
+        @media screen and (max-width: 768px) {
+            table, th, td {
+                font-size: 14px;
+                padding: 8px;
+            }
+            button {
+                padding: 8px 16px;
+            }
+        }
+        .filters {
+            margin: 20px;
+            display: flex;
+            justify-content: space-between;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .filters input {
+            padding: 8px;
+            margin: 0 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Confirmed Discarded Donations</h2>
+        <p id="userDisplay"></p>
+        <button id="logoutButton" onclick="logoutUser()">Logout</button>
+    </header>
+
+    <!-- Filters -->
+    <div class="filters">
+        <input type="text" id="filterDonorName" placeholder="Filter by Donor Name" onkeyup="filterTable()">
+        <input type="text" id="filterBloodGroup" placeholder="Filter by Blood Group" onkeyup="filterTable()">
+        <input type="text" id="filterUnitNumber" placeholder="Filter by Unit Number" onkeyup="filterTable()">
+    </div>
+
+    <table id="confirmedDiscardedTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)"># <i class="fas fa-sort"></i></th>
+
+                <th onclick="sortTable(2)">Donation Date <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(3)">Component Type <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(4)">Blood Group <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(5)">Volume Collected <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(6)">Unit Number <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(7)">Confirmed By <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(8)">Confirmed On <i class="fas fa-sort"></i></th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Confirmed discarded donations will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <div class="pagination" id="paginationControls">
+        <!-- Pagination buttons will be dynamically added here -->
+    </div>
+
+    <footer>
+   <button onclick="window.location.href='confirm.html'"><i class="fas fa-check-circle"></i>Confirmed Discarded Blood </button>
+   <button onclick="window.location.href='discard.html'">Discard List(Blood Bank)<i class="fas fa-trash-alt"></i> </button>
+   <button onclick="window.location.href='pend.html'"><i class="fas fa-hourglass-half"></i> Pending List</button>
+        <p>Project for Pamoja Dokita&reg; 2025 </p>
+    </footer>
+
+    <script>
+        const itemsPerPage = 5;
+        let currentPage = 1;
+
+        // Function to retrieve logged-in user and display user info
+        function displayUserInfo() {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (loggedInUser) {
+                document.getElementById('userDisplay').innerText = `Logged In as ${loggedInUser.username}`;
+            } else {
+                alert('Please log in to access this page.');
+                window.location.href = 'index.html'; // Redirect to login page if not logged in
+            }
+        }
+
+        // Function to log out the current user
+        function logoutUser() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html'; // Redirect to login page
+        }
+
+        // Function to display the confirmed discarded list
+        function displayConfirmedDiscardedList(page = 1) {
+            currentPage = page;
+            const confirmedDiscardedList = JSON.parse(localStorage.getItem('confirmedDiscardedList')) || [];
+            const confirmedDiscardedTable = document.getElementById('confirmedDiscardedTable').getElementsByTagName('tbody')[0];
+            confirmedDiscardedTable.innerHTML = '';
+
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedList = confirmedDiscardedList.slice(startIndex, endIndex);
+
+            if (paginatedList.length === 0) {
+                confirmedDiscardedTable.innerHTML = '<tr><td colspan="10">No confirmed discarded donations yet.</td></tr>';
+            } else {
+                paginatedList.forEach((donation, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${startIndex + index + 1}</td>
+
+                        <td>${donation.donationDate}</td>
+                        <td><i class="fas fa-tint"></i> ${donation.componentType}</td>
+                        <td>${donation.bloodGroup} (${donation.rhFactor})</td>
+                        <td>${donation.volumeCollected} mL</td>
+                        <td>${donation.unitNumber}</td>
+                        <td>${donation.discardedBy}</td>
+                        <td>${new Date(donation.discardTimestamp).toLocaleString()}</td>
+                        <td>
+                            <button onclick="revertConfirmedDiscard(${index})"><i class="fas fa-undo"></i> Revert</button>
+                        </td>
+                    `;
+                    confirmedDiscardedTable.appendChild(row);
+                });
+            }
+
+            // Add pagination controls
+            const totalPages = Math.ceil(confirmedDiscardedList.length / itemsPerPage);
+            const paginationControls = document.getElementById('paginationControls');
+            paginationControls.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.innerText = i;
+                button.onclick = () => displayConfirmedDiscardedList(i);
+                paginationControls.appendChild(button);
+            }
+        }
+
+        // Function to revert the confirmed discard and move the item back to the discarded list
+        function revertConfirmedDiscard(index) {
+            const confirmedDiscardedList = JSON.parse(localStorage.getItem('confirmedDiscardedList')) || [];
+            const discardedList = JSON.parse(localStorage.getItem('discardedList')) || [];
+            const donationToRevert = confirmedDiscardedList.splice(index, 1)[0]; // Remove from confirmed discarded list
+            discardedList.push(donationToRevert); // Add back to discarded list
+
+            // Save the updated lists back to localStorage
+            localStorage.setItem('confirmedDiscardedList', JSON.stringify(confirmedDiscardedList));
+            localStorage.setItem('discardedList', JSON.stringify(discardedList));
+
+            // Re-render the table
+            displayConfirmedDiscardedList();
+        }
+
+        // Function to filter the table based on user input
+        function filterTable() {
+            const filterDonorName = document.getElementById('filterDonorName').value.toLowerCase();
+            const filterBloodGroup = document.getElementById('filterBloodGroup').value.toLowerCase();
+            const filterUnitNumber = document.getElementById('filterUnitNumber').value.toLowerCase();
+
+            const confirmedDiscardedList = JSON.parse(localStorage.getItem('confirmedDiscardedList')) || [];
+            const filteredList = confirmedDiscardedList.filter(donation => {
+                return (
+                    donation.donorName.toLowerCase().includes(filterDonorName) &&
+                    donation.bloodGroup.toLowerCase().includes(filterBloodGroup) &&
+                    donation.unitNumber.toLowerCase().includes(filterUnitNumber)
+                );
+            });
+
+            const confirmedDiscardedTable = document.getElementById('confirmedDiscardedTable').getElementsByTagName('tbody')[0];
+            confirmedDiscardedTable.innerHTML = '';
+            filteredList.forEach((donation, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${donation.donorName}</td>
+                    <td>${donation.donationDate}</td>
+                    <td><i class="fas fa-tint"></i> ${donation.componentType}</td>
+                    <td>${donation.bloodGroup} (${donation.rhFactor})</td>
+                    <td>${donation.volumeCollected} mL</td>
+                    <td>${donation.unitNumber}</td>
+                    <td>${donation.discardedBy}</td>
+                    <td>${new Date(donation.discardTimestamp).toLocaleString()}</td>
+                    <td>
+                        <button onclick="revertConfirmedDiscard(${index})"><i class="fas fa-undo"></i> Revert</button>
+                    </td>
+                `;
+                confirmedDiscardedTable.appendChild(row);
+            });
+        }
+
+        // Function to sort the table based on column index
+        function sortTable(columnIndex) {
+            const table = document.getElementById("confirmedDiscardedTable");
+            const rows = Array.from(table.rows).slice(1); // Exclude the header row
+            const sortedRows = rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[columnIndex].textContent.trim();
+                const cellB = rowB.cells[columnIndex].textContent.trim();
+                if (cellA < cellB) return -1;
+                if (cellA > cellB) return 1;
+                return 0;
+            });
+            sortedRows.forEach(row => table.appendChild(row)); // Reorder the rows
+        }
+
+        // Initialize page
+        window.onload = function() {
+            displayUserInfo();
+            displayConfirmedDiscardedList();
+        };
+    </script>
+    
+    
+    
+    <script>
+      
+      
+     document.addEventListener("DOMContentLoaded", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!user) {
+    window.location.href = "login.html"; // Redirect if not logged in
+    return;
+  }
+
+  // Define allowed pages per role
+  const rolePages = {
+    "Receptionist": ["karibu.html", "form.html"],
+    "Nurse": ["form.html", "karibu.html"],
+    "Blood Bank Technician": "all", // Unrestricted access
+    "Lab Manager (Doctor)": "all", // Unrestricted access
+    "Cashier": ["approvedRequests.html", "karibu.html"]
+  };
+
+  const currentPage = window.location.pathname.split("/").pop();
+  const allowedPages = rolePages[user.role] || [];
+
+  // Allow unrestricted access for Blood Bank Technician & Lab Manager
+  if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+    alert("⚠️ Access Denied: You do not have permission to view this page.");
+    window.location.href = "karibu.html"; // Redirect to main dashboard
+  }
+
+  // Display user role info
+  const userRoleDisplay = document.getElementById("userRole");
+  if (userRoleDisplay) {
+    userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+  }
+});
+    </script>
+    
+    
+    
+</body>
+</html>

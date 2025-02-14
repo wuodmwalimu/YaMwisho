@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CHARLES DREW - DOKITA®</title>
+    <link rel="stylesheet" href="styles.css"> <!-- External CSS -->
+    <script src="https://kit.fontawesome.com/YOUR-FONT-AWESOME-KIT.js" crossorigin="anonymous"></script> <!-- Font Awesome -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        h1 {
+            color: #d32f2f;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .info {
+            font-size: 16px;
+            color: #555;
+        }
+        .welcome-msg {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .icon {
+            color: #d32f2f;
+            margin-right: 5px;
+        }
+        #logoutBtn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #logoutBtn:hover {
+            background-color: #cc0000;
+        }
+        .sys-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="sys-title">⚕️ Welcome to CHARLES DREW - DOKITA® <br> Blood Bank Inventory Management System</p>
+<div>
+  <p class="welcome-msg" id="dynamicMessage"></p>
+</div>
+        <h1><i class="fas fa-user-circle icon"></i> Hello, <span id="userName"></span>!</h1>
+        <p><i class="fas fa-envelope icon"></i> Email: <span id="userEmail"></span></p>
+        <p><i class="fas fa-globe icon"></i> Country: <span id="userCountry"></span></p>
+        <p><i class="fas fa-map-marker-alt icon"></i> Region: <span id="userRegion"></span></p>
+        <p><i class="fas fa-hospital icon"></i> Hospital: <span id="userHospital"></span></p>
+        <p><i class="fas fa-user-md icon"></i> Role: <span id="userRole"></span></p>
+
+        <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        
+        <!-- Dynamic Welcome Message with Time of Day -->
+        <p class="welcome-msg" id="dynamicMessage"></p>
+    </div>
+
+
+<div>
+  <p class="welcome-msg" id="dynamicMessage"></p>
+</div>
+
+
+<script src="admin.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+            if (!loggedInUser) {
+                alert("❌ Not logged in! Redirecting to login page...");
+                window.location.href = "index.html";
+                return;
+            }
+
+            // Auto-generate email in first.last@pamoja.com format
+            const generatedEmail = `${loggedInUser.firstName.toLowerCase()}.${loggedInUser.lastName.toLowerCase()}@pamoja.com`;
+
+            // Display user details
+            document.getElementById("userName").textContent = `${loggedInUser.firstName} ${loggedInUser.lastName}`;
+            document.getElementById("userEmail").textContent = generatedEmail;
+            document.getElementById("userCountry").textContent = loggedInUser.country;
+            document.getElementById("userRegion").textContent = loggedInUser.region;
+            document.getElementById("userHospital").textContent = loggedInUser.hospital;
+            document.getElementById("userRole").textContent = loggedInUser.role;
+
+            // Dynamic Time-Based Welcome Message
+            const hours = new Date().getHours();
+            let timeGreeting;
+            if (hours < 12) {
+                timeGreeting = "Good morning ☀️";
+            } else if (hours < 18) {
+                timeGreeting = "Good afternoon 🌞";
+            } else {
+                timeGreeting = "Good evening 🌙";
+            }
+
+            const welcomeMessage = `${timeGreeting}, ${loggedInUser.firstName}! Welcome to CHARLES DREW - DOKITA® Blood Bank at ${loggedInUser.hospital}, ${loggedInUser.region}, ${loggedInUser.country}. 💉 Your role as ${loggedInUser.role} is vital in saving lives. ❤️`;
+
+            document.getElementById("dynamicMessage").textContent = welcomeMessage;
+
+            // Logout function
+            document.getElementById("logoutBtn").addEventListener("click", function () {
+                localStorage.removeItem("loggedInUser");
+                window.location.href = "index.html";
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Denied Requests</title>
+  
+  <link rel="stylesheet" href="teste.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <h2><i class="fas fa-ban"></i> Denied Blood Requests</h2>
+  </header>
+
+  <!-- Main Content Section -->
+  <main>
+    <section>
+      <table>
+        <thead>
+          <tr>
+            <th><i class="fas fa-user"></i> Recipient</th>
+            <th><i class="fas fa-tint"></i> Blood Type</th>
+            <th><i class="fas fa-flask"></i> Units</th>
+            <th><i class="fas fa-exclamation-circle"></i> Urgency</th>
+            <th><i class="fas fa-times-circle"></i> Denial Reasons</th>
+            <th><i class="fas fa-user-times"></i> Denied By</th>
+            <th><i class="fas fa-calendar-alt"></i> Denied On</th>
+            <th><i class="fas fa-cogs"></i> Actions</th>
+          </tr>
+        </thead>
+        <tbody id="deniedRequestsList">
+          <!-- Rows will be dynamically populated -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Modal for Viewing Denied Request Details -->
+  <div id="viewModal" class="hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal">
+      <h3><i class="fas fa-eye"></i> View Request Details</h3>
+      <article>
+        <p><strong>Recipient Name:</strong> <span id="viewRecipientName">N/A</span></p>
+        <p><strong>Age:</strong> <span id="viewAge">N/A</span></p>
+        <p><strong>Blood Type:</strong> <span id="viewBloodType">N/A</span></p>
+        <p><strong>Units:</strong> <span id="viewUnits">N/A</span></p>
+        <p><strong>Urgency:</strong> <span id="viewUrgency">N/A</span></p>
+        <p><strong>Denial Reasons:</strong> <span id="viewDenialReasons">N/A</span></p>
+        <p><strong>Denied By:</strong> <span id="viewDeniedBy">N/A</span></p>
+        <p><strong>Denied On:</strong> <span id="viewDeniedOn">N/A</span></p>
+        <p><strong>Additional Notes:</strong> <span id="viewAdditionalNotes">N/A</span></p>
+      </article>
+      <button id="closeViewModal" aria-label="Close View Modal">
+        <i class="fas fa-times"></i> Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer Navigation -->
+  <footer>
+    <nav>
+      <a href="demo.html" class="btn"><i class="fas fa-plus-circle"></i> Make a Request</a>
+      <a href="requestList.html" class="btn"><i class="fas fa-clock"></i> Pending Requests</a>
+      <a href="deniedRequests.html" class="btn active"><i class="fas fa-ban"></i> Denied Requests</a>
+      <a href="approvedRequests.html" class="btn"><i class="fas fa-chart-bar"></i> Cashier Approval 💰☑</a>
+      <a href="pesa.html" class="btn"><i class="fas fa-check-circle"></i> Approved Requests</a>
+      <a href="last.html" class="btn"><i class="fas fa-check-circle"></i> Completed Requests</a>
+      <a href="karibu.html" class="btn back-btn"><i class="fas fa-arrow-left"></i> Back to Main Page</a>
+    </nav>
+  </footer>
+
+
+
+<script>
+  
+  document.addEventListener("DOMContentLoaded", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!user) {
+    window.location.href = "login.html"; // Redirect if not logged in
+    return;
+  }
+
+  // Define allowed pages per role
+  const rolePages = {
+    "Receptionist": ["karibu.html", "form.html"],
+    "Nurse": ["form.html", "karibu.html"],
+    "Blood Bank Technician": "all", // Unrestricted access
+    "Lab Manager (Doctor)": "all", // Unrestricted access
+    "Cashier": ["approvedRequests.html", "karibu.html"]
+  };
+
+  const currentPage = window.location.pathname.split("/").pop();
+  const allowedPages = rolePages[user.role] || [];
+
+  // Allow unrestricted access for Blood Bank Technician & Lab Manager
+  if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+    alert("⚠️ Access Denied: You do not have permission to view this page.");
+    window.location.href = "karibu.html"; // Redirect to main dashboard
+  }
+
+  // Display user role info
+  const userRoleDisplay = document.getElementById("userRole");
+  if (userRoleDisplay) {
+    userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+  }
+});
+  
+</script>
+
+  <!-- JavaScript File -->
+  <script src="deniedRequests.js" defer></script>
+
+</body>
+</html>

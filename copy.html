@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Requests Management</title>
+    <link rel="stylesheet" href="copy.css">
+</head>
+<body>
+
+    <h2>Select a Table to View</h2>
+    <select id="tableSelector">
+        <option value="approvedTable">Approved Blood Requests</option>
+        <option value="clearedTable">Cashier Approved Blood Requests</option>
+        <option value="maliziaTable">Cleared Blood Requests</option>
+        <option value="requestsTable">Pending Requests</option> <!-- Added Requests Table option -->
+    </select>
+
+    <div id="approvedSection" style="display: none;">
+        <input type="text" id="approvedFilter" placeholder="Filter by Recipient Name or Blood Type">
+        <table border="1" id="approvedTable">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="recipientName">Recipient</th>
+                    <th class="sortable" data-column="status">Status</th>
+                    <th class="sortable" data-column="bloodType">Blood Type</th>
+                    <th class="sortable" data-column="units">Units</th>
+                    <th class="sortable" data-column="approvedBy">Approved By</th>
+                    <th class="sortable" data-column="timestamp">Approval Time</th>
+                </tr>
+            </thead>
+            <tbody id="approvedRequestsList"></tbody>
+        </table>
+    </div>
+
+    <div id="clearedSection" style="display: none;">
+        <input type="text" id="clearedFilter" placeholder="Filter by Recipient Name or Blood Type">
+        <table border="1" id="clearedTable">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="recipientName">Recipient</th>
+                    <th class="sortable" data-column="status">Status</th>
+                    <th class="sortable" data-column="bloodType">Blood Type</th>
+                    <th class="sortable" data-column="units">Units</th>
+                    <th class="sortable" data-column="completedBy">Cleared By</th>
+                    <th class="sortable" data-column="completedAt">Cleared At</th>
+                </tr>
+            </thead>
+            <tbody id="clearedRequestsList"></tbody>
+        </table>
+    </div>
+
+    <div id="maliziaSection" style="display: none;">
+        <input type="text" id="maliziaFilter" placeholder="Filter by Recipient Name or Blood Type">
+        <table border="1" id="maliziaTable">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="recipientName">Recipient Name</th>
+                    <th class="sortable" data-column="status">Status</th>
+                    <th class="sortable" data-column="bloodType">Blood Type</th>
+                    <th class="sortable" data-column="units">Units</th>
+                    <th class="sortable" data-column="completedBy">Completed By</th>
+                    <th class="sortable" data-column="completedAt">Completed At</th>
+                </tr>
+            </thead>
+            <tbody id="maliziaList"></tbody>
+        </table>
+    </div>
+
+    <!-- New section for Pending Requests -->
+    <div id="requestsSection" style="display: none;">
+        <input type="text" id="requestsFilter" placeholder="Filter by Recipient Name or Blood Type">
+        <table border="1" id="requestsTable">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="recipientName">Recipient</th>
+                    <th class="sortable" data-column="bloodType">Blood Type</th>
+                    <th class="sortable" data-column="units">Units</th>
+                    <th class="sortable" data-column="hospital">Hospital</th>
+                    <th class="sortable" data-column="doctor">Doctor</th>
+                    <th class="sortable" data-column="urgency">Urgency</th>
+                    <th class="sortable" data-column="timestamp">Submitted Time</th>
+                    <th class="sortable" data-column="status">Status</th>
+                </tr>
+            </thead>
+            <tbody id="requestsList"></tbody>
+        </table>
+    </div>
+
+    <button id="printButton" onclick="printTable()">Print Table</button>
+
+    <script src="country.js" defer></script>
+    <script src="squeeze.js" defer></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dbName = "BloodRequestDB";
+            let db;
+
+            // Open IndexedDB
+            const openDB = () => {
+                const request = indexedDB.open(dbName, 9);
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    console.log("Database opened successfully!");
+                    loadApprovedRequests();
+                    loadClearedRequests();
+                    loadMaliziaRequests();
+                    loadRequests(); // Load the new requests table
+                };
+
+                request.onerror = (event) => {
+                    console.error("Database error:", event.target.errorCode);
+                };
+            };
+
+            // Load approved requests
+            const loadApprovedRequests = () => {
+                const transaction = db.transaction('approvedRequests', 'readonly');
+                const store = transaction.objectStore('approvedRequests');
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    const requests = event.target.result;
+                    const tbody = document.getElementById('approvedRequestsList');
+                    tbody.innerHTML = '';
+
+                    requests.forEach((req) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${req.recipientName || 'N/A'}</td>
+                            <td>${req.status || 'N/A'}</td>
+                            <td>${req.bloodType || 'Unknown'}</td>
+                            <td>${req.units || 'N/A'}</td>
+                            <td>${req.approvedBy || 'Unknown'}</td>
+                            <td>${req.timestamp || 'N/A'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                };
+            };
+
+            // Load cleared requests
+            const loadClearedRequests = () => {
+                const transaction = db.transaction('clearedRequests', 'readonly');
+                const store = transaction.objectStore('clearedRequests');
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    const requests = event.target.result;
+                    const tbody = document.getElementById('clearedRequestsList');
+                    tbody.innerHTML = '';
+
+                    requests.forEach((req) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${req.recipientName || 'N/A'}</td>
+                            <td>${req.status || 'Completed'}</td>
+                            <td>${req.bloodType || 'Unknown'}</td>
+                            <td>${req.units || 'N/A'}</td>
+                            <td>${req.completedBy || 'Unknown'}</td>
+                            <td>${req.completedAt || 'N/A'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                };
+            };
+
+            // Load malizia requests
+            const loadMaliziaRequests = () => {
+                const transaction = db.transaction('malizia', 'readonly');
+                const store = transaction.objectStore('malizia');
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    const requests = event.target.result;
+                    const tbody = document.getElementById('maliziaList');
+                    tbody.innerHTML = '';
+
+                    requests.forEach((req) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${req.recipientName || 'N/A'}</td>
+                            <td>${req.status || 'N/A'}</td>
+                            <td>${req.bloodType || 'Unknown'}</td>
+                            <td>${req.units || 'N/A'}</td>
+                            <td>${req.completedBy || 'Unknown'}</td>
+                            <td>${req.completedAt || 'N/A'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                };
+            };
+
+            // Load pending requests (new)
+            const loadRequests = () => {
+                const transaction = db.transaction('requests', 'readonly');
+                const store = transaction.objectStore('requests');
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    const requests = event.target.result;
+                    const tbody = document.getElementById('requestsList');
+                    tbody.innerHTML = '';
+
+                    requests.forEach((req) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${req.recipientName || 'N/A'}</td>
+                            <td>${req.bloodType || 'Unknown'}</td>
+                            <td>${req.units || 'N/A'}</td>
+                            <td>${req.hospital || 'N/A'}</td>
+                            <td>${req.doctor || 'Unknown'}</td>
+                            <td>${req.urgency || 'Normal'}</td>
+                            <td>${req.timestamp || 'N/A'}</td>
+                            <td>${req.status || 'Pending'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                };
+            };
+
+            // Filter tables
+            const filterTable = (inputId, listId) => {
+                const filter = document.getElementById(inputId).value.toLowerCase();
+                const rows = document.querySelectorAll(`#${listId} tr`);
+
+                rows.forEach((row) => {
+                    const cells = row.getElementsByTagName('td');
+                    let match = false;
+
+                    for (let i = 0; i < cells.length; i++) {
+                        if (cells[i].textContent.toLowerCase().includes(filter)) {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    row.style.display = match ? '' : 'none';
+                });
+            };
+
+            // Sort columns
+            const sortTable = (tableId, column) => {
+                const table = document.getElementById(tableId);
+                const rows = Array.from(table.getElementsByTagName('tr')).slice(1);
+                const isNumeric = !isNaN(rows[0].cells[column].textContent);
+
+                rows.sort((rowA, rowB) => {
+                    const cellA = rowA.cells[column].textContent.trim();
+                    const cellB = rowB.cells[column].textContent.trim();
+
+                    if (isNumeric) {
+                        return parseFloat(cellA) - parseFloat(cellB);
+                    } else {
+                        return cellA.localeCompare(cellB);
+                    }
+                });
+
+                rows.forEach(row => table.appendChild(row));
+            };
+
+            // Print the selected table
+            window.printTable = () => {
+                const selectedTable = document.querySelector(`#${document.getElementById('tableSelector').value}`);
+                const printWindow = window.open('', '', 'height=400,width=800');
+                printWindow.document.write('<html><head><title>Print Table</title></head><body>');
+                printWindow.document.write(selectedTable.outerHTML);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.print();
+            };
+
+            // Add event listeners to filters
+            document.getElementById('approvedFilter').addEventListener('input', () => filterTable('approvedFilter', 'approvedRequestsList'));
+            document.getElementById('clearedFilter').addEventListener('input', () => filterTable('clearedFilter', 'clearedRequestsList'));
+            document.getElementById('maliziaFilter').addEventListener('input', () => filterTable('maliziaFilter', 'maliziaList'));
+            document.getElementById('requestsFilter').addEventListener('input', () => filterTable('requestsFilter', 'requestsList')); // Added for Requests
+
+            // Add event listener for table selection
+            document.getElementById('tableSelector').addEventListener('change', (e) => {
+                const selectedTable = e.target.value;
+                document.querySelectorAll('div[id$="Section"]').forEach(section => section.style.display = 'none');
+                document.getElementById(selectedTable.replace('Table', 'Section')).style.display = 'block';
+            });
+
+            // Initialize the database and load data
+            openDB();
+        });
+    </script>
+</body>
+</html>

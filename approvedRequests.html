@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Requests Management</title>
+  <link rel="stylesheet" href="hola.css">
+  <!-- Link Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Header styling */
+    header {
+      text-align: center;
+      padding: 15px;
+      background: #333;
+      color: white;
+    }
+
+    /* Welcome Message Styling */
+    #userHeader {
+      text-align: center;
+      padding: 8px;
+      font-size: 18px;
+      background: #444;
+      color: white;
+      margin-top: -5px; /* Aligns with the main header */
+    }
+
+    #logoutButton {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+
+    #logoutButton:hover {
+      background: darkred;
+    }
+
+    /* Print Styling */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printSection, #printSection * {
+        visibility: visible;
+      }
+      #printSection {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+
+    .print-btn {
+      margin: 15px;
+      padding: 8px 12px;
+      font-size: 16px;
+      cursor: pointer;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .print-btn:hover {
+      background: darkgreen;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><i class="fas fa-tint"></i> Blood Requests Management</h1>
+  </header>
+
+  <!-- Welcome User Section -->
+  <div id="userHeader">
+    <span id="welcomeMessage">Welcome, Guest</span>
+    <button id="logoutButton" style="display: none;">Logout</button>
+  </div>
+
+  <main>
+    <section>
+      <h2><i class="fas fa-check-double"></i> Cashier Approval</h2>
+      <button class="print-btn" onclick="printDocument()">Print Report</button>
+      
+      <div id="printSection">
+        <table border="1" width="100%">
+          <thead>
+            <tr>
+              <th>Recipient</th>
+              <th>Status</th>
+              <th>Blood Type</th>
+              <th>Units</th>
+              <th>Approved By</th>
+              <th>Approval Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="approvedRequestsList">
+            <tr>
+              <td>John Doe</td>
+              <td>Approved</td>
+              <td>A+</td>
+              <td>2</td>
+              <td>Jane Smith</td>
+              <td>2025-02-01 10:15 AM</td>
+              <td>
+                <button class="view-btn" data-id="1"><i class="fa fa-eye"></i> View</button>
+                <button class="revert-btn" data-id="1"><i class="fa fa-undo"></i> Revert</button>
+                <button class="complete-btn" data-id="1"><i class="fa fa-check"></i> ☑ Check</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Verified By & Timestamp -->
+        <p>Verified by: <span id="verifiedBy"></span></p>
+        <p>Date & Time: <span id="dateTimeStamp"></span></p>
+      </div>
+
+      <div class="pagination">
+        <button id="prevPage" class="pagination-btn">
+          <i class="fas fa-arrow-left"></i> Previous
+        </button>
+        <span id="pageInfo">Page 1</span>
+        <button id="nextPage" class="pagination-btn">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="demo.html" class="btn">
+      <i class="fas fa-plus-circle"></i> Make a Request
+    </a>
+    <a href="requestList.html" class="btn">
+      <i class="fas fa-clock"></i> Pending Requests
+    </a>
+    <a href="deniedRequests.html" class="btn"><i class="fas fa-ban"></i> Denied Requests</a>
+    <a href="approvedRequests.html" class="btn">
+      <i class="fas fa-chart-bar"></i> Cashier Approval 💰☑
+    </a>
+    <a href="pesa.html" class="btn">
+      <i class="fas fa-check-circle"></i> Approved Requests
+    </a>
+    <a href="last.html" class="btn">
+      <i class="fas fa-check-circle"></i> Completed Requests
+    </a>
+    <a href="karibu.html" class="btn back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Main Page
+    </a>
+  </footer>
+
+  <script src="approvedRequests.js" defer></script>
+
+  <script>
+    // Retrieve the logged-in user from localStorage
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const welcomeMessage = document.getElementById("welcomeMessage");
+    const logoutButton = document.getElementById("logoutButton");
+    const verifiedBySpan = document.getElementById("verifiedBy");
+    const dateTimeStampSpan = document.getElementById("dateTimeStamp");
+
+    if (loggedInUser) {
+      welcomeMessage.textContent = `Welcome, ${loggedInUser.username}`;
+      logoutButton.style.display = "inline-block"; // Show logout button
+      verifiedBySpan.textContent = loggedInUser.username; // Set verified by username
+    } else {
+      verifiedBySpan.textContent = "Unknown User"; // Default if no user is logged in
+    }
+
+    // Set Date & Time Stamp
+    const currentDate = new Date();
+    dateTimeStampSpan.textContent = currentDate.toLocaleString();
+
+    // Logout function
+    logoutButton.addEventListener("click", function() {
+      localStorage.removeItem("loggedInUser"); // Remove user data
+      window.location.href = "index.html"; // Redirect to login page
+    });
+
+    // Print Function
+    function printDocument() {
+      window.print();
+    }
+  </script>
+
+
+<script>
+  
+  document.addEventListener("DOMContentLoaded", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!user) {
+    window.location.href = "login.html"; // Redirect if not logged in
+    return;
+  }
+
+  // Define allowed pages per role
+  const rolePages = {
+    "Receptionist": ["karibu.html", "form.html"],
+    "Nurse": ["form.html", "karibu.html"],
+    "Blood Bank Technician": "all", // Unrestricted access
+    "Lab Manager (Doctor)": "all", // Unrestricted access
+    "Cashier": ["approvedRequests.html", "karibu.html"]
+  };
+
+  const currentPage = window.location.pathname.split("/").pop();
+  const allowedPages = rolePages[user.role] || [];
+
+  // Allow unrestricted access for Blood Bank Technician & Lab Manager
+  if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+    alert("⚠️ Access Denied: You do not have permission to view this page.");
+    window.location.href = "karibu.html"; // Redirect to main dashboard
+  }
+
+  // Display user role info
+  const userRoleDisplay = document.getElementById("userRole");
+  if (userRoleDisplay) {
+    userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+  }
+});
+  
+</script>
+
+
+<script src="sessionf1.js"></script>
+
+</body>
+</html>

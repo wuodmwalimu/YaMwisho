@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pamoja Dokita&reg; Blood Bank Donor Consent Form</title>
+  <link rel="stylesheet" href="consent-form.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-tint"></i> Pamoja Dokita&reg; Blood Bank Donor Consent Form</h1>
+  </header>
+
+  <main>
+    <form id="donorForm">
+      <!-- Consent Information to Read First -->
+      <section id="info">
+        <h2><i class="fas fa-info-circle"></i> Important Information Before Donating Blood</h2>
+        <p>
+          Before you consent to donate blood, it is essential to understand the following:
+        </p>
+        <ol>
+          <li><strong>Voluntary Donation:</strong> Your donation is voluntary, and you may withdraw at any time.</li>
+          <li><strong>Health Status:</strong> Blood donation is safe, but it is essential to be in good health. Please confirm that you have no history of certain medical conditions (e.g., HIV, Hepatitis, or other infectious diseases).</li>
+          <li><strong>Eligibility Requirements:</strong> You must be at least 18 years old and weigh at least 50kg. Your hemoglobin levels must be normal, and you should not have donated blood in the last 3 months.</li>
+          <li><strong>Medical Conditions:</strong> If you have a history of heart disease, diabetes, or high blood pressure, consult with a medical professional before donating.</li>
+          <li><strong>Alcohol and Drugs:</strong> Do not consume alcohol or recreational drugs 24 hours before your donation.</li>
+          <li><strong>Hydration:</strong> Ensure you drink plenty of water and eat a balanced meal before donating blood.</li>
+          <li><strong>Post-Donation Care:</strong> After donating blood, please stay in the donation center for at least 15 minutes for monitoring.</li>
+          <li><strong>Side Effects:</strong> Common side effects include dizziness, bruising, or fainting. These are typically short-term and can be managed easily.</li>
+          <li><strong>Informed Consent:</strong> By giving your consent, you confirm you have read and understood the information provided and accept the risks involved with blood donation.</li>
+          <li><strong>Privacy:</strong> All information provided will be kept confidential and used solely for medical purposes.</li>
+        </ol>
+        <p>Once you are ready, you can proceed with the consent below.</p>
+      </section>
+
+      
+      <section id="consent">
+        <h2><i class="fas fa-hand-holding-heart"></i> Consent for Blood Donation</h2>
+        
+        <label for="voluntaryDonation">
+          <i class="fas fa-thumbs-up"></i> I understand that I am donating blood voluntarily, and I give my consent to donate.
+        </label><br>
+        <input type="radio" id="voluntaryDonationYes" name="voluntaryDonation" value="Yes" required>
+        <label for="voluntaryDonationYes">Yes</label>
+        <input type="radio" id="voluntaryDonationNo" name="voluntaryDonation" value="No" required>
+        <label for="voluntaryDonationNo">No</label><br><br>
+
+        <label for="accuracyConfirmation">
+          <i class="fas fa-info-circle"></i> I confirm that all the information provided above is accurate to the best of my knowledge.
+        </label><br>
+        <input type="radio" id="accuracyConfirmationYes" name="accuracyConfirmation" value="Yes" required>
+        <label for="accuracyConfirmationYes">Yes</label>
+        <input type="radio" id="accuracyConfirmationNo" name="accuracyConfirmation" value="No" required>
+        <label for="accuracyConfirmationNo">No</label><br><br>
+      </section>
+
+      <!-- Signature Section -->
+      <section id="signature">
+        <h2><i class="fas fa-signature"></i> Signature of Donor</h2>
+
+        <label for="signatureInput">Signature of Donor:</label><br>
+        <input type="text" id="signatureInput" name="signatureInput" placeholder="Enter your signature" required><br><br>
+
+        <label for="dateInput">Date:</label><br>
+        <input type="date" id="dateInput" name="dateInput" required><br><br>
+      </section>
+
+      <!-- Consent List (to be shown after consent is given) -->
+      <section id="consentListSection">
+        <h2><i class="fas fa-list-ul"></i> Consent History</h2>
+        <div id="consentList">
+          <button type="submit" class="form-button">Submit Consent</button>
+          <button type="button" id="showConsentList" class="form-button">Show Consent List</button>
+          <ul id="consentListItems" style="display:none;">
+            <!-- Dynamically populated consent list will appear here -->
+          </ul>
+        </div>
+      </section>
+      
+      <!-- Section for Button with Toggleable Themes -->
+<section id="button-section" style="text-align: center; margin-top: 30px;">
+    <button id="themeButton" onclick="toggleTheme()">Back to Main Page</button>
+</section>
+
+<style>
+    /* Button Styling for the Toggleable Theme */
+    #themeButton {
+        background-color: white;
+        color: #333;
+        font-size: 16px;
+        padding: 10px 20px;
+        border: 2px solid #333;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #themeButton.white:hover {
+        background-color: #333;
+        color: white;
+    }
+
+    /* TED Theme Styling */
+    #themeButton.red {
+        background-color: #E30613; /* TED red */
+        color: white;
+    }
+
+    #themeButton.red:hover {
+        background-color: #A10200; /* Darker red on hover */
+    }
+
+    /* Distinct Section Styling */
+    #button-section {
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        width: 50%; /* Center the button section */
+    }
+</style>
+
+<script>
+    // Toggle the theme between white and red
+    function toggleTheme() {
+        const button = document.getElementById('themeButton');
+        // Change the theme and redirect to main page
+        button.classList.toggle('red');
+        button.classList.toggle('white');
+        window.location.href = 'karibu.html'; // Redirect to main page
+    }
+</script>
+
+      <!-- Link to Main Page -->
+      <a href="karibu.html" class="form-button">Back to Main Page</a>
+    </form>
+  </main>
+
+  <script src="consent-form.js"></script>
+</body>
+</html>
