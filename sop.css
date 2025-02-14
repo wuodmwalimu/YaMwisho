@@ -1,0 +1,155 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background: #f9f1f1 url('blood-background.png') no-repeat center center/cover;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-width: 1100px;
+  width: 100%;
+}
+
+/* Info Section: White background so the image blends in */
+.info-section {
+  flex: 1;
+  padding: 40px;
+  background-color: #fff;
+  color: #333;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Revised Logo Image */
+.info-section .logo {
+  display: block;
+  width: 80%;              /* Reduced width relative to container */
+  max-width: 300px;        /* Maximum width */
+  background-color: #fff;  /* White background to match info section */
+  border-radius: 10px;     /* Smooth, rounded edges */
+  padding: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  object-fit: contain;
+}
+
+/* Info Section Headings and Text */
+.info-section h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.info-section .description {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.info-section .highlight {
+  font-weight: bold;
+  color: #8B0000; /* Deep red accent */
+}
+
+.alt-link {
+  color: #8B0000;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* Developer signature as a background watermark in the Info Section */
+.info-section::after {
+  content: "Developed by Wuon Kyllian Gi Brilliant";
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+/* Form Section: Now red background */
+.form-section {
+  flex: 1;
+  padding: 40px;
+  background-color: #8B0000; /* Deep red */
+  color: #fff;
+}
+
+.form-section h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+}
+
+.input-group .show-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Primary Button: White button with deep red text */
+.btn-primary {
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  color: #8B0000;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #f0f0f0;
+}
+
+.hidden {
+  display: none;
+}
+
+.form-message {
+  font-size: 14px;
+  margin-top: 10px;
+  color: #fff;
+}
+
+.form-message a {
+  color: #fff;
+  text-decoration: none;
+}

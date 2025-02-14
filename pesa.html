@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cleared By Finance</title>
+  <link rel="stylesheet" href="last.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>
+      <i class="fas fa-check-circle"></i> Approved Requests
+    </h1>
+  </header>
+
+  <!-- Welcome User Section -->
+  <div id="userHeader">
+    <span id="welcomeMessage">Welcome, Guest</span>
+    <button id="logoutButton" style="display: none;">Logout</button>
+  </div>
+
+  <main>
+    <section>
+      <button id="printButton" class="btn" onclick="printDocument()">
+        <i class="fas fa-print"></i> Print Report
+      </button>
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <i class="fas fa-user"></i> Recipient
+              <button class="sort" data-column="recipientName">
+                <i class="fas fa-sort"></i> Sort
+              </button>
+            </th>
+            <th><i class="fas fa-check-circle"></i> Status</th>
+            <th>
+              <i class="fas fa-tint"></i> Blood Type
+              <button class="sort" data-column="bloodType">
+                <i class="fas fa-sort"></i> Sort
+              </button>
+            </th>
+            <th>
+              <i class="fas fa-vial"></i> Units
+              <input type="text" id="filterUnits" placeholder="Filter">
+            </th>
+            <th><i class="fas fa-user-clock"></i> Completed By</th>
+            <th><i class="fas fa-calendar-check"></i> Completed At</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="clearedRequestsList">
+          <!-- Cleared requests will be dynamically populated here -->
+        </tbody>
+      </table>
+      <div id="paginationControls">
+        <button id="prevPage" class="btn">
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <span id="pageInfo">Page 1</span>
+        <button id="nextPage" class="btn">
+          <i class="fas fa-chevron-right"></i> Next
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Digital Signature and Timestamp for Print -->
+  <div id="printSection">
+    <p style="margin-top: 20px;">
+      <strong>Dispatched by:</strong> <span id="dispatchedBy"></span>
+    </p>
+    <p>
+      <strong>Date & Time:</strong> <span id="timestamp"></span>
+    </p>
+  </div>
+
+  <footer>
+    <a href="demo.html" class="btn">
+      <i class="fas fa-plus-circle"></i> Make a Request
+    </a>
+    <a href="requestList.html" class="btn">
+      <i class="fas fa-clock"></i> Pending Requests
+    </a>
+    <a href="deniedRequests.html" class="btn"><i class="fas fa-ban"></i> Denied Requests</a>
+    <a href="approvedRequests.html" class="btn">
+      <i class="fas fa-chart-bar"></i> Cashier Approval 💰☑
+    </a>
+    <a href="pesa.html" class="btn">
+      <i class="fas fa-check-circle"></i> Approved Requests
+    </a>
+    <a href="last.html" class="btn">
+      <i class="fas fa-check-circle"></i> Completed Requests
+    </a>
+    <a href="karibu.html" class="btn back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Main Page
+    </a>
+  </footer>
+
+  <script>
+    // Retrieve the logged-in user from localStorage
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const welcomeMessage = document.getElementById("welcomeMessage");
+    const logoutButton = document.getElementById("logoutButton");
+    const dispatchedBy = document.getElementById("dispatchedBy");
+    const timestamp = document.getElementById("timestamp");
+
+    if (loggedInUser) {
+      welcomeMessage.textContent = `Welcome, ${loggedInUser.username}`;
+      logoutButton.style.display = "inline-block"; // Show logout button
+      dispatchedBy.textContent = loggedInUser.username; // Set dispatched by
+    } else {
+      dispatchedBy.textContent = "Unknown"; // Default if no user logged in
+    }
+
+    // Logout function
+    logoutButton.addEventListener("click", function() {
+      localStorage.removeItem("loggedInUser"); // Remove user data
+      window.location.href = "index.html"; // Redirect to login page
+    });
+
+    // Function to generate timestamp
+    function generateTimestamp() {
+      const now = new Date();
+      return now.toLocaleString(); // Format as per user locale
+    }
+
+    timestamp.textContent = generateTimestamp();
+
+    // Print function
+    function printDocument() {
+      timestamp.textContent = generateTimestamp(); // Update before printing
+      window.print();
+    }
+  </script>
+  
+  
+  <<script>document.addEventListener("DOMContentLoaded", function() {
+const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+if (!user) {
+window.location.href = "login.html"; // Redirect if not logged in
+return;
+}
+
+// Define allowed pages per role
+const rolePages = {
+"Receptionist": ["karibu.html", "form.html"],
+"Nurse": ["form.html", "karibu.html"],
+"Blood Bank Technician": "all", // Unrestricted access
+"Lab Manager (Doctor)": "all", // Unrestricted access
+"Cashier": ["approvedRequests.html", "karibu.html"]
+};
+
+const currentPage = window.location.pathname.split("/").pop();
+const allowedPages = rolePages[user.role] || [];
+
+// Allow unrestricted access for Blood Bank Technician & Lab Manager
+if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+alert("⚠️ Access Denied: You do not have permission to view this page.");
+window.location.href = "karibu.html"; // Redirect to main dashboard
+}
+
+// Display user role info
+const userRoleDisplay = document.getElementById("userRole");
+if (userRoleDisplay) {
+userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+}
+});</script>
+
+  <script src="pesa.js" defer></script>
+</body>
+
+</html>

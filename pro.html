@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pamoja Dokita® Blood Donation System - Approve Donations</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="pro.css">
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-heartbeat"></i> Approve Blood Donations</h1>
+    <nav>
+      <a href="karibu.html" id="homeButton"><i class="fas fa-home"></i> Home</a>
+      <a href="pro.html" id="approveDonationsButton"><i class="fas fa-tasks"></i> Approve Donations</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Unprocessed Donations Table -->
+    <section>
+      <h2 class="collapsible-header"><i class="fas fa-tasks"></i> Unprocessed Donations</h2>
+      <div class="collapsible-body" style="display: block;">
+        <p>Below is the list of donations awaiting approval. Click "Approve" to approve a donation.</p>
+        <table id="unprocessedTable" class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ID</th>
+              <th>Donor Name</th>
+              <th>Blood Group</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows will be dynamically added here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Approved Donations Table -->
+    <section>
+      <h2 class="collapsible-header"><i class="fas fa-check-circle"></i> Approved Donations</h2>
+      <div class="collapsible-body">
+        <p>Approved donations are listed here.</p>
+        <table id="approvedTable" class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ID</th>
+              <th>Donor Name</th>
+              <th>Blood Type</th>
+              <th>Units</th>
+              <th>Approval Date</th>
+              <th>Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows will be dynamically added here -->
+          </tbody>
+        </table>
+      </div>
+      
+      
+      <!-- Section for Button with Toggleable Themes -->
+<section id="button-section" style="text-align: center; margin-top: 30px;">
+    <button id="themeButton" onclick="toggleTheme()">Back to Main Page</button>
+</section>
+
+<style>
+    /* Button Styling for the Toggleable Theme */
+    #themeButton {
+        background-color: white;
+        color: #333;
+        font-size: 16px;
+        padding: 10px 20px;
+        border: 2px solid #333;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #themeButton.white:hover {
+        background-color: #333;
+        color: white;
+    }
+
+    /* TED Theme Styling */
+    #themeButton.red {
+        background-color: #E30613; /* TED red */
+        color: white;
+    }
+
+    #themeButton.red:hover {
+        background-color: #A10200; /* Darker red on hover */
+    }
+
+    /* Distinct Section Styling */
+    #button-section {
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        width: 50%; /* Center the button section */
+    }
+</style>
+
+<script>
+    // Toggle the theme between white and red
+    function toggleTheme() {
+        const button = document.getElementById('themeButton');
+        // Change the theme and redirect to main page
+        button.classList.toggle('red');
+        button.classList.toggle('white');
+        window.location.href = 'karibu.html'; // Redirect to main page
+    }
+</script>
+      
+      
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Pamoja Dokita® | Powered by Compassion <i class="fas fa-heart"></i></p>
+  </footer>
+
+  <script src="pro.js"></script>
+    <script src="prot.js"></script>
+  <script>
+    // Toggle collapsible body visibility for both sections
+    document.querySelectorAll('.collapsible-header').forEach(header => {
+      header.addEventListener('click', function () {
+        const collapsibleBody = this.nextElementSibling;
+        const isVisible = collapsibleBody.style.display === 'block';
+        collapsibleBody.style.display = isVisible ? 'none' : 'block';
+      });
+    });
+  </script>
+  
+  
+  
+    
+</body>
+</html>

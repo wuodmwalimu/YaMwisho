@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blood Request History</title>
+  <link rel="stylesheet" href="styless.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    input, button {
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+    button {
+      cursor: pointer;
+    }
+    .icon {
+      margin-right: 5px;
+    }
+    .dropdown {
+      display: none;
+      padding: 10px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .expand-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>
+    <i class="fas fa-history icon"></i> Blood Request History
+  </h2>
+  <input type="text" id="searchInput" placeholder="Search..." oninput="globalSearch()" />
+  <button onclick="globalSearch()">
+    <i class="fas fa-search"></i> Search
+  </button>
+  <!-- Container where request tables are built dynamically -->
+  <div id="requestsContainer"></div>
+  <script src="nyasaye.js"></script>
+  
+  
+  
+  
+  
+  <<script>
+    document.addEventListener("DOMContentLoaded", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!user) {
+    window.location.href = "login.html"; // Redirect if not logged in
+    return;
+  }
+
+  // Define allowed pages per role
+  const rolePages = {
+    "Receptionist": ["karibu.html", "form.html"],
+    "Nurse": ["form.html", "karibu.html"],
+    "Blood Bank Technician": "all", // Unrestricted access
+    "Lab Manager (Doctor)": "all", // Unrestricted access
+    "Cashier": ["approvedRequests.html", "karibu.html"]
+  };
+
+  const currentPage = window.location.pathname.split("/").pop();
+  const allowedPages = rolePages[user.role] || [];
+
+  // Allow unrestricted access for Blood Bank Technician & Lab Manager
+  if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+    alert("⚠️ Access Denied: You do not have permission to view this page.");
+    window.location.href = "karibu.html"; // Redirect to main dashboard
+  }
+
+  // Display user role info
+  const userRoleDisplay = document.getElementById("userRole");
+  if (userRoleDisplay) {
+    userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+  }
+});
+  </script>
+</body>
+</html>
+
+
+
+
+

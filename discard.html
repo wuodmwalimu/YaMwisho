@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processed Donations</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header, footer {
+            background-color: #d32f2f;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+        h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        p {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #d32f2f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        table {
+            width: 100%;
+            max-width: 1000px;
+            border-collapse: collapse;
+            margin: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            cursor: pointer;
+            background-color: #f44336;
+            color: white;
+        }
+        th:hover {
+            background-color: #b71c1c;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        select {
+            padding: 5px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        footer p {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        @media screen and (max-width: 768px) {
+            table, th, td {
+                font-size: 14px;
+                padding: 8px;
+            }
+            button {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Donations Awaiting Discard</h2>
+        <p id="userDisplay"></p>
+        <button id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </header>
+
+    <div>
+        <label for="bloodGroupFilter">Filter by Blood Group:</label>
+        <select id="bloodGroupFilter" onchange="filterProcessingList()">
+            <option value="">All Blood Groups</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+        </select>
+
+        <label for="componentTypeFilter">Filter by Component Type:</label>
+        <select id="componentTypeFilter" onchange="filterProcessingList()">
+            <option value="">All Component Types</option>
+            <option value="Whole Blood">Whole Blood</option>
+            <option value="Red Blood Cells">Red Blood Cells</option>
+            <option value="Platelets">Platelets</option>
+            <option value="Plasma">Plasma</option>
+            <option value="Cryoprecipitate">Cryoprecipitate</option>
+            <option value="Granulocytes">Granulocytes</option>
+        </select>
+
+        <table id="processingTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+
+                    <th onclick="sortProcessingList('donationDate')">Donation Date</th>
+                    <th>Component Type</th>
+                    <th>Blood Group</th>
+                    <th>Volume Collected</th>
+                    <th>Unit Number</th>
+                    <th>Expiry Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Donations will be dynamically populated here -->
+            </tbody>
+        </table>
+
+        <div>
+
+        </div>
+    </div>
+
+    <footer>
+       <button onclick="window.location.href='confirm.html'"><i class="fas fa-check-circle"></i>Confirmed Discarded Blood </button>
+   <button onclick="window.location.href='discard.html'">Discard List(Blood Bank)<i class="fas fa-trash-alt"></i> </button>
+   <button onclick="window.location.href='pend.html'"><i class="fas fa-hourglass-half"></i> Pending List</button>
+        <p>Project for Pamoja Dokita&reg; 2025 </p>
+    </footer>
+
+    <script src="processed_donations.js"></script>
+    
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!user) {
+    window.location.href = "login.html"; // Redirect if not logged in
+    return;
+  }
+
+  // Define allowed pages per role
+  const rolePages = {
+    "Receptionist": ["karibu.html", "form.html"],
+    "Nurse": ["form.html", "karibu.html"],
+    "Blood Bank Technician": "all", // Unrestricted access
+    "Lab Manager (Doctor)": "all", // Unrestricted access
+    "Cashier": ["approvedRequests.html", "karibu.html"]
+  };
+
+  const currentPage = window.location.pathname.split("/").pop();
+  const allowedPages = rolePages[user.role] || [];
+
+  // Allow unrestricted access for Blood Bank Technician & Lab Manager
+  if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+    alert("⚠️ Access Denied: You do not have permission to view this page.");
+    window.location.href = "karibu.html"; // Redirect to main dashboard
+  }
+
+  // Display user role info
+  const userRoleDisplay = document.getElementById("userRole");
+  if (userRoleDisplay) {
+    userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+  }
+});
+    </script>
+</body>
+</html>

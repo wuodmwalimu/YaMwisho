@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discarded Donations</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header, footer {
+            background-color: #d32f2f;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+        h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        p {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            max-width: 1000px;
+            border-collapse: collapse;
+            margin: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f44336;
+            color: white;
+            cursor: pointer;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        footer p {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #d32f2f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background-color: #b71c1c;
+        }
+        @media screen and (max-width: 768px) {
+            table, th, td {
+                font-size: 14px;
+                padding: 8px;
+            }
+            button {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Discarded Donations Awaiting Final Confirmation</h2>
+        <p id="userDisplay"></p>
+        <button id="logoutButton" onclick="logoutUser()">Logout</button>
+    </header>
+
+    <table id="discardedTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)"># <i class="fas fa-sort"></i></th>
+
+                <th onclick="sortTable(2)">Donation Date <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(3)">Component Type <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(4)">Blood Group <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(5)">Volume Collected <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(6)">Unit Number <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(7)">Discarded By <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(8)">Discarded At <i class="fas fa-sort"></i></th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Discarded donations will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <div class="pagination" id="paginationControls">
+        <!-- Pagination buttons will be dynamically added here -->
+    </div>
+
+    <footer>
+     <button onclick="window.location.href='confirm.html'"><i class="fas fa-check-circle"></i>Confirmed Discarded Blood </button>
+   <button onclick="window.location.href='discard.html'">Discard List(Blood Bank)<i class="fas fa-trash-alt"></i> </button>
+   <button onclick="window.location.href='pend.html'"><i class="fas fa-hourglass-half"></i> Pending List</button>
+        <p>Project for Pamoja Dokita&reg; 2025 </p>
+    </footer>
+
+    <script>
+        const itemsPerPage = 5;
+
+        // Function to retrieve logged-in user and display user info
+        function displayUserInfo() {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (loggedInUser) {
+                document.getElementById('userDisplay').innerText = `Logged In as ${loggedInUser.username}`;
+            } else {
+                alert('Please log in to access this page.');
+                window.location.href = 'index.html'; // Redirect to login page if not logged in
+            }
+        }
+
+        // Function to log out the current user
+        function logoutUser() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'index.html'; // Redirect to login page
+        }
+
+        // Function to display the discarded list
+        function displayDiscardedList(page = 1) {
+            const discardedList = JSON.parse(localStorage.getItem('discardedList')) || [];
+            const discardedTable = document.getElementById('discardedTable').getElementsByTagName('tbody')[0];
+            discardedTable.innerHTML = '';
+
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedList = discardedList.slice(startIndex, endIndex);
+
+            if (paginatedList.length === 0) {
+                discardedTable.innerHTML = '<tr><td colspan="10">No discarded donations yet.</td></tr>';
+            } else {
+                paginatedList.forEach((donation, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${startIndex + index + 1}</td>
+
+                        <td>${donation.donationDate}</td>
+                        <td><i class="fas fa-tint"></i> ${donation.componentType}</td>
+                        <td>${donation.bloodGroup} (${donation.rhFactor})</td>
+                        <td>${donation.volumeCollected} mL</td>
+                        <td>${donation.unitNumber}</td>
+                        <td>${donation.discardedBy}</td>
+                        <td>${new Date(donation.discardTimestamp).toLocaleString()}</td>
+                        <td>
+                            <button onclick="revertDiscard(${index})"><i class="fas fa-undo"></i> Revert</button>
+                            <button onclick="confirmDiscard(${index})"><i class="fas fa-check-circle"></i> Confirm Discard</button>
+                        </td>
+                    `;
+                    discardedTable.appendChild(row);
+                });
+            }
+
+            // Add pagination controls
+            const totalPages = Math.ceil(discardedList.length / itemsPerPage);
+            const paginationControls = document.getElementById('paginationControls');
+            paginationControls.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.innerText = i;
+                button.onclick = () => displayDiscardedList(i);
+                paginationControls.appendChild(button);
+            }
+        }
+
+        // Function to revert the discard action and move the item back to the processing list
+        function revertDiscard(index) {
+            const discardedList = JSON.parse(localStorage.getItem('discardedList')) || [];
+            const processingList = JSON.parse(localStorage.getItem('processingList')) || [];
+            const donationToRevert = discardedList.splice(index, 1)[0]; // Remove from discarded list
+            processingList.push(donationToRevert); // Add back to processing list
+
+            // Save the updated lists back to localStorage
+            localStorage.setItem('discardedList', JSON.stringify(discardedList));
+            localStorage.setItem('processingList', JSON.stringify(processingList));
+
+            // Re-render the table
+            displayDiscardedList();
+        }
+
+        // Function to confirm the discard and move the item to a confirmed discarded list
+        function confirmDiscard(index) {
+            const discardedList = JSON.parse(localStorage.getItem('discardedList')) || [];
+            const confirmedDiscardedList = JSON.parse(localStorage.getItem('confirmedDiscardedList')) || [];
+            const donationToConfirm = discardedList.splice(index, 1)[0]; // Remove from discarded list
+            confirmedDiscardedList.push(donationToConfirm); // Add to confirmed discarded list
+
+            // Save the updated lists back to localStorage
+            localStorage.setItem('discardedList', JSON.stringify(discardedList));
+            localStorage.setItem('confirmedDiscardedList', JSON.stringify(confirmedDiscardedList));
+
+            // Re-render the table
+            displayDiscardedList();
+        }
+
+        // Function to sort the table based on column index
+        function sortTable(colIndex) {
+            const table = document.getElementById("discardedTable");
+            const rows = Array.from(table.rows).slice(1); // Skip the header row
+
+            const sortedRows = rows.sort((a, b) => {
+                const aText = a.cells[colIndex].innerText.trim();
+                const bText = b.cells[colIndex].innerText.trim();
+
+                if (colIndex === 2 || colIndex === 8) {
+                    // Date columns (Donation Date and Discarded At)
+                    return new Date(aText) - new Date(bText);
+                } else {
+                    return aText.localeCompare(bText);
+                }
+            });
+
+            // Rebuild the table body with sorted rows
+            const tbody = table.getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+            sortedRows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Function to filter the table based on search input in the header
+        function filterTable(colIndex) {
+            const filterInput = document.getElementById(`filterInput${colIndex}`);
+            const filterValue = filterInput.value.toLowerCase();
+            const table = document.getElementById("discardedTable");
+            const rows = Array.from(table.rows).slice(1);
+
+            rows.forEach(row => {
+                const cellText = row.cells[colIndex].innerText.toLowerCase();
+                if (cellText.includes(filterValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize page
+        window.onload = function() {
+            displayUserInfo();
+            displayDiscardedList();
+        };
+    </script>
+    
+    
+    <<script>document.addEventListener("DOMContentLoaded", function() {
+const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+if (!user) {
+window.location.href = "login.html"; // Redirect if not logged in
+return;
+}
+
+// Define allowed pages per role
+const rolePages = {
+"Receptionist": ["karibu.html", "form.html"],
+"Nurse": ["form.html", "karibu.html"],
+"Blood Bank Technician": "all", // Unrestricted access
+"Lab Manager (Doctor)": "all", // Unrestricted access
+"Cashier": ["approvedRequests.html", "karibu.html"]
+};
+
+const currentPage = window.location.pathname.split("/").pop();
+const allowedPages = rolePages[user.role] || [];
+
+// Allow unrestricted access for Blood Bank Technician & Lab Manager
+if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+alert("⚠️ Access Denied: You do not have permission to view this page.");
+window.location.href = "karibu.html"; // Redirect to main dashboard
+}
+
+// Display user role info
+const userRoleDisplay = document.getElementById("userRole");
+if (userRoleDisplay) {
+userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+}
+});</script>
+</body>
+</html>

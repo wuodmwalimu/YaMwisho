@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Donations</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff5f5;
+            color: #a50000;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #a50000;
+            text-transform: uppercase;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffe6e6;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #a50000;
+            text-align: center;
+        }
+        th {
+            background-color: #a50000;
+            color: white;
+        }
+        button {
+            background-color: #a50000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #7d0000;
+        }
+        #testResultsModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            width: 300px;
+        }
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #a50000;
+            border-radius: 4px;
+        }
+        .fa-check-circle {
+            color: green;
+        }
+        .fa-times-circle {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h2><i class="fas fa-procedures"></i> Processing Donations</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Unit Number</th>
+                <th>Donation Date</th>
+                <th>Component</th>
+                <th>Blood Group</th>
+                <th>Volume (mL)</th>
+                    <th>Storage Temperature</th>
+                <th>Shelf Life</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="processingTable"></tbody>
+    </table>
+
+    <!-- Test Results Modal -->
+    <div id="testResultsModal">
+        <h3><i class="fas fa-vial"></i> Confirm Test Results</h3>
+        <p>Unit Number: <span id="testUnitNumber"></span></p>
+        <p>Component Type: <span id="testComponentType"></span></p>
+        <p>Blood Group: <span id="testBloodGroup"></span></p>
+        <p>Volume: <span id="testVolume"></span></p>
+
+        <label for="hivTest">HIV Test:</label>
+        <select id="hivTest">
+            <option>Negative</option>
+            <option>Positive</option>
+        </select>
+
+        <label for="hbsAgTest">HBsAg Test:</label>
+        <select id="hbsAgTest">
+            <option>Negative</option>
+            <option>Positive</option>
+        </select>
+
+        <label for="hcvTest">HCV Test:</label>
+        <select id="hcvTest">
+            <option>Negative</option>
+            <option>Positive</option>
+        </select>
+
+        <label for="syphilisTest">Syphilis Test:</label>
+        <select id="syphilisTest">
+            <option>Negative</option>
+            <option>Positive</option>
+        </select>
+
+        <label for="otherTests">Other Tests:</label>
+        <select id="otherTests">
+            <option>None</option>
+            <option>Requires Further Testing</option>
+        </select>
+
+        <button onclick="confirmTestResults()"><i class="fas fa-check-circle"></i> Confirm</button>
+        <button onclick="closeModal()"><i class="fas fa-times-circle"></i> Cancel</button>
+    </div>
+
+    <h2><i class="fas fa-check"></i> Confirmed Donations</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Unit Number</th>
+                <th>Donation Date</th>
+                <th>Component</th>
+                <th>Blood Group</th>
+                <th>Volume (mL)</th>
+                <th>Storage Temperature</th>
+                <th>Shelf Life</th>
+            </tr>
+        </thead>
+        <tbody id="confirmedTable"></tbody>
+    </table>
+
+<script>
+  
+  
+  document.addEventListener("DOMContentLoaded", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!user) {
+    window.location.href = "login.html"; // Redirect if not logged in
+    return;
+  }
+
+  // Define allowed pages per role
+  const rolePages = {
+    "Receptionist": ["karibu.html", "form.html"],
+    "Nurse": ["form.html", "karibu.html"],
+    "Blood Bank Technician": "all", // Unrestricted access
+    "Lab Manager (Doctor)": "all", // Unrestricted access
+    "Cashier": ["approvedRequests.html", "karibu.html"]
+  };
+
+  const currentPage = window.location.pathname.split("/").pop();
+  const allowedPages = rolePages[user.role] || [];
+
+  // Allow unrestricted access for Blood Bank Technician & Lab Manager
+  if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+    alert("⚠️ Access Denied: You do not have permission to view this page.");
+    window.location.href = "karibu.html"; // Redirect to main dashboard
+  }
+
+  // Display user role info
+  const userRoleDisplay = document.getElementById("userRole");
+  if (userRoleDisplay) {
+    userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+  }
+});
+</script>
+
+
+
+    <script src="confirms.js"></script>
+
+</body>
+</html>

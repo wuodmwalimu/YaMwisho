@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pamoja Dokita&reg; - Signup & Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="diff.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="form-container">
+      <!-- Signup Form -->
+      <form id="signupForm" class="auth-form">
+        <h2><i class="fas fa-user-plus"></i> Signup</h2>
+        <div class="form-group">
+          <label for="signupPrefix"><i class="fas fa-id-badge"></i> Prefix:</label>
+          <select id="signupPrefix" required>
+            <option value="Dr">Dr</option>
+            <option value="Mr">Mr</option>
+            <option value="Ms">Ms</option>
+            <option value="Mrs">Mrs</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="signupFirstName"><i class="fas fa-user"></i> First Name:</label>
+          <input type="text" id="signupFirstName" required>
+        </div>
+        <div class="form-group">
+          <label for="signupLastName"><i class="fas fa-user"></i> Last Name:</label>
+          <input type="text" id="signupLastName" required>
+        </div>
+        <div class="form-group">
+          <label for="signupEmail"><i class="fas fa-envelope"></i> Email:</label>
+          <input type="email" id="signupEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="signupCountry"><i class="fas fa-globe"></i> Country:</label>
+          <select id="signupCountry" required>
+            <option value="">Select Country</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Cameroon">Cameroon</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="signupRegion"><i class="fas fa-map-marker-alt"></i> Region:</label>
+          <select id="signupRegion" required>
+            <option value="">Select Region</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="signupHospital"><i class="fas fa-hospital"></i> Hospital:</label>
+          <select id="signupHospital" required>
+            <option value="">Select Hospital</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="signupRole"><i class="fas fa-briefcase"></i> Role:</label>
+          <select id="signupRole" required>
+            <option value="Receptionist">Receptionist</option>
+            <option value="Nurse">Nurse</option>
+            <option value="Blood Bank Technician">Blood Bank Technician</option>
+            <option value="Lab Manager (Doctor)">Lab Manager (Doctor)</option>
+            <option value="Cashier">Cashier</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="signupPassword"><i class="fas fa-lock"></i> Password:</label>
+          <input type="password" id="signupPassword" required>
+        </div>
+        <button type="submit"><i class="fas fa-user-plus"></i> Signup</button>
+        <p class="toggle-form">Already have an account? <a href="#" id="showLogin">Login</a></p>
+      </form>
+
+      <!-- Login Form (Hidden Initially) -->
+      <form id="loginForm" class="auth-form hidden">
+        <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+        <div class="form-group">
+          <label for="loginEmail"><i class="fas fa-envelope"></i> Email:</label>
+          <input type="email" id="loginEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword"><i class="fas fa-lock"></i> Password:</label>
+          <input type="password" id="loginPassword" required>
+        </div>
+        <button type="submit"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <p class="toggle-form">Don't have an account? <a href="#" id="showSignup">Signup</a></p>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>Developed for  <strong>Charles Drew-Dokita</strong></p>
+  </footer>
+
+  <!-- Hardcoded Data -->
+  <script type="application/json" id="regionsData">
+    {
+      "Kenya": ["Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret"],
+      "Cameroon": ["Centre", "Littoral", "East", "North", "West", "South"]
+    }
+  </script>
+
+<script type="application/json" id="hospitalsData">
+  {
+    "Nairobi": ["Kenyatta National Hospital", "Aga Khan Hospital", "Nairobi Hospital"],
+    "Mombasa": ["Coast General Hospital", "Mombasa Hospital"],
+    "Kisumu": ["Jaramogi Oginga Odinga Hospital", "Aga Khan Kisumu"],
+    "Nakuru": ["Nakuru Level 5 Hospital", "Mediheal Hospital Nakuru"],
+    "Eldoret": ["Moi Teaching & Referral Hospital", "Reale Hospital"],
+    "Centre": ["HGOPY", "HCY", "HGY", "CHRACERH", "HOP Caisse", "HOP Biyem Assi"],
+    "Littoral": ["LAQUINTINIE", "Hop Gem Douala", "HGOPED", "NOTRE DAME"],
+    "East": ["Bertoua Regional Hospital"],
+    "North": ["Garoua Regional Hospital"],
+    "West": ["Bafoussam Regional Hospital"],
+    "South": ["Ebolowa Regional Hospital"]
+  }
+</script>
+
+  <script src="auth.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const signupForm = document.getElementById("signupForm");
+      const loginForm = document.getElementById("loginForm");
+      const showLogin = document.getElementById("showLogin");
+      const showSignup = document.getElementById("showSignup");
+
+      showLogin.addEventListener("click", function(event) {
+        event.preventDefault();
+        signupForm.classList.add("hidden");
+        loginForm.classList.remove("hidden");
+      });
+
+      showSignup.addEventListener("click", function(event) {
+        event.preventDefault();
+        loginForm.classList.add("hidden");
+        signupForm.classList.remove("hidden");
+      });
+
+      const countrySelect = document.getElementById("signupCountry");
+      const regionSelect = document.getElementById("signupRegion");
+      const hospitalSelect = document.getElementById("signupHospital");
+
+      const regionsData = JSON.parse(document.getElementById("regionsData").textContent);
+      const hospitalsData = JSON.parse(document.getElementById("hospitalsData").textContent);
+
+      countrySelect.addEventListener("change", function() {
+        const selectedCountry = this.value;
+        regionSelect.innerHTML = '<option value="">Select Region</option>';
+        hospitalSelect.innerHTML = '<option value="">Select Hospital</option>';
+
+        if (selectedCountry in regionsData) {
+          regionsData[selectedCountry].forEach(region => {
+            const option = document.createElement("option");
+            option.value = region;
+            option.textContent = region;
+            regionSelect.appendChild(option);
+          });
+        }
+      });
+
+      regionSelect.addEventListener("change", function() {
+        const selectedRegion = this.value;
+        hospitalSelect.innerHTML = '<option value="">Select Hospital</option>';
+
+        if (selectedRegion in hospitalsData) {
+          hospitalsData[selectedRegion].forEach(hospital => {
+            const option = document.createElement("option");
+            option.value = hospital;
+            option.textContent = hospital;
+            hospitalSelect.appendChild(option);
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

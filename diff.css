@@ -1,0 +1,107 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-image: url('back.jpg');
+  background-size: cover; /* Ensures the image covers the entire background */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  background-position: center center; /* Centers the image */
+  background-attachment: fixed; /* Ensures the background image stays fixed */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #fff; /* White text color */
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  margin: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  text-align: center;
+  color: #e50914; /* Red color */
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333; /* Darker text for readability */
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #fff;
+  font-size: 16px;
+  color: #333; /* Text color for inputs */
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #e50914; /* Red border on focus */
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background: #e50914; /* Red background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background: #c20812; /* Darker red on hover */
+}
+
+.toggle-form {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.toggle-form a {
+  color: #e50914;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.toggle-form a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #fff; /* White footer text */
+}
+
+footer strong {
+  color: #e50914; /* Red color for the developer name */
+}
+
+.hidden {
+  display: none;
+}

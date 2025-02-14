@@ -1,0 +1,47 @@
+/* Blood Availability Section */
+#blood-availability {
+  padding: 20px;
+}
+
+.blood-group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Evenly distribute columns */
+  gap: 20px;
+  width: 100%;
+}
+
+.blood-group-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.blood-group-card i {
+  font-size: 3rem;
+  color: #e74c3c; /* Red color for the icon */
+  margin-bottom: 10px;
+}
+
+.blood-group-card p {
+  margin: 5px 0;
+  font-size: 1.2rem;
+}
+
+.blood-group-card span {
+  font-weight: bold;
+  color: #c0392b;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .blood-group-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust for smaller screens */
+  }
+}

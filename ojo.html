@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Request Management | Pamoja Dokita&reg;</title>
+  <link rel="stylesheet" href="ojo.css">
+</head>
+<body>
+  
+  
+  <div class="container">
+    <header>
+      <h1>Blood Request Management</h1>
+      <nav>
+        <a href="index.html">Home</a> | 
+        <a href="karibu.html">Main Page</a>
+      </nav>
+    </header>
+
+    <!-- Request Form -->
+    <section id="request-form-section">
+      <h2>Submit a Blood Request</h2>
+      <form id="blood-request-form">
+        <label for="req-id">Request ID:</label>
+        <input type="text" id="req-id" name="req-id" readonly>
+
+        <label for="requester-name">Requester Name:</label>
+        <input type="text" id="requester-name" name="requester-name" placeholder="Enter your name" required>
+
+        <label for="requester-email">Email:</label>
+        <input type="email" id="requester-email" name="requester-email" placeholder="Enter your email" required>
+
+        <label for="requester-phone">Phone Number:</label>
+        <input type="tel" id="requester-phone" name="requester-phone" placeholder="Enter your phone number" required>
+
+        <label for="blood-type">Blood Type:</label>
+        <select id="blood-type" name="blood-type" required>
+          <option value="" disabled selected>Select Blood Type</option>
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+        </select>
+
+        <label for="quantity">Units Required:</label>
+        <input type="number" id="quantity" name="quantity" placeholder="Enter the number of units" required>
+
+        <label for="price">Price Option:</label>
+        <div>
+          <input type="radio" id="price-a" name="price" value="Price A" required>
+          <label for="price-a">Price A</label>
+          <input type="radio" id="price-b" name="price" value="Price B" required>
+          <label for="price-b">Price B</label>
+        </div>
+
+        <label for="delivery-method">Delivery Method:</label>
+        <select id="delivery-method" name="delivery-method" required>
+          <option value="" disabled selected>Select Delivery Method</option>
+          <option value="Pick-up">Pick-up</option>
+          <option value="Delivery">Delivery</option>
+        </select>
+
+        <label for="delivery-address">Delivery Address (if applicable):</label>
+        <input type="text" id="delivery-address" name="delivery-address" placeholder="Enter address for delivery">
+
+        <label for="additional-notes">Additional Notes:</label>
+        <textarea id="additional-notes" name="additional-notes" placeholder="Add any special instructions"></textarea>
+
+        <button type="submit">Submit Request</button>
+      </form>
+    </section>
+
+    <!-- Pending Requests -->
+    <section id="request-list-section">
+      <h2>Pending Requests</h2>
+      <p>Review the pending requests and take action:</p>
+      <table id="request-list" class="data-table">
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Name</th>
+            <th>Blood Type</th>
+            <th>Units</th>
+            <th>Price Option</th>
+            <th>Delivery Method</th>
+            <th>Address</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic content -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Approved Requests -->
+    <section id="approved-list-section">
+      <h2>Approved Requests</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Name</th>
+            <th>Blood Type</th>
+            <th>Units</th>
+            <th>Price Option</th>
+            <th>Delivery Method</th>
+            <th>Approval Reason</th>
+            <th>Approval Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic content -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- On Hold Requests -->
+    <section id="on-hold-list-section">
+      <h2>Requests On Hold</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Request ID</th>
+            <th>Name</th>
+            <th>Blood Type</th>
+            <th>Units</th>
+            <th>Price Option</th>
+            <th>Delivery Method</th>
+            <th>Reason</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamic content -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Summary Section -->
+    <section id="summary-section">
+      <h2>Summary</h2>
+      <div>
+        <label for="summary-timeframe">Generate Summary:</label>
+        <select id="summary-timeframe">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+        </select>
+        <button id="generate-summary">Generate</button>
+      </div>
+      <div id="summary-output"></div>
+    </section>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="hidden">
+    <div>
+      <h3>Provide Reason</h3>
+      <textarea id="reason-text" placeholder="Enter your reason here"></textarea>
+      <button id="submit-reason">Submit</button>
+      <button id="cancel-reason">Cancel</button>
+    </div>
+  </div>
+<scrippt src="sim.js" defer></scrippt>
+  <script src="ojo.js" defer></script>
+  <script src="approved.js" defer></script>
+</body>
+</html>

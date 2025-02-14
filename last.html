@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Completed Records</title>
+  <link rel="stylesheet" href="last.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-notes-medical"></i> Completed Requests</h1>
+  </header>
+  <main>
+    <table id="maliziaTable">
+      <thead>
+        <tr>
+          <th><i class="fas fa-user"></i> Recipient Name</th>
+          <th><i class="fas fa-info-circle"></i> Status</th>
+          <th><i class="fas fa-tint"></i> Blood Type</th>
+          <th><i class="fas fa-weight"></i> Units</th>
+          <th><i class="fas fa-calendar-alt"></i> Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Malizia records will be dynamically inserted here -->
+      </tbody>
+    </table>
+  </main>
+  <script src="last.js"></script>
+  
+  
+  
+  
+  
+  <script>
+    
+    document.addEventListener("DOMContentLoaded", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!user) {
+    window.location.href = "login.html"; // Redirect if not logged in
+    return;
+  }
+
+  // Define allowed pages per role
+  const rolePages = {
+    "Receptionist": ["karibu.html", "form.html"],
+    "Nurse": ["form.html", "karibu.html"],
+    "Blood Bank Technician": "all", // Unrestricted access
+    "Lab Manager (Doctor)": "all", // Unrestricted access
+    "Cashier": ["approvedRequests.html", "karibu.html"]
+  };
+
+  const currentPage = window.location.pathname.split("/").pop();
+  const allowedPages = rolePages[user.role] || [];
+
+  // Allow unrestricted access for Blood Bank Technician & Lab Manager
+  if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+    alert("⚠️ Access Denied: You do not have permission to view this page.");
+    window.location.href = "karibu.html"; // Redirect to main dashboard
+  }
+
+  // Display user role info
+  const userRoleDisplay = document.getElementById("userRole");
+  if (userRoleDisplay) {
+    userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+  }
+});
+  </script>
+</body>
+</html>

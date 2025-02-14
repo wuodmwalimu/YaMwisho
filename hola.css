@@ -1,0 +1,166 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fff5f5; /* Light red background */
+  color: #333; /* Dark text for contrast */
+}
+
+header {
+  background-color: #b71c1c; /* Deep red */
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+header i {
+  margin-right: 0.5rem;
+}
+
+main {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: #b71c1c;
+  margin-bottom: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #ff5252; /* Lighter red */
+  padding-bottom: 0.5rem;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+table thead {
+  background-color: #d32f2f; /* Medium red */
+  color: #fff;
+}
+
+table th, table td {
+  text-align: left;
+  padding: 1rem;
+  border: 1px solid #ffebee; /* Light border */
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #ffe6e6; /* Very light red */
+}
+
+table tbody tr:hover {
+  background-color: #ffcccc; /* Hover effect */
+}
+
+/* Pagination Buttons */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.pagination-btn {
+  background-color: #b71c1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.pagination-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Buttons */
+.btn {
+  background-color: #ff5252;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+  display: inline-block;
+  font-size: 1rem;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #ff1744;
+}
+
+.back-btn {
+  background-color: #d50000;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #b71c1c;
+  color: #fff;
+  position: sticky;
+  bottom: 0;
+  margin-top: 2rem;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  table thead tr {
+    display: none;
+  }
+
+  table tbody tr {
+    margin-bottom: 1rem;
+    border: 1px solid #ffebee;
+  }
+
+  table td {
+    padding: 0.5rem;
+    text-align: right;
+    position: relative;
+  }
+
+  table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    text-align: left;
+    font-weight: bold;
+    color: #b71c1c;
+  }
+}

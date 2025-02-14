@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Donation Requests</title>
+  <link rel="stylesheet" href="testo.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <header class="header">
+      <h1 class="header__title"><i class="fa fa-list"></i> Blood Donation Request List</h1>
+      <p class="header__info highlight"><i class="fa fa-info-circle"></i> Below is the list of all blood donation requests.</p>
+
+      <!-- User Info Section -->
+      <div class="header__user-info" id="userHeader">
+        <span id="welcomeMessage"></span>
+        <button id="logoutButton" class="btn btn--logout"><i class="fa fa-sign-out"></i> Logout</button>
+      </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <main class="main-content">
+      <!-- Print Report Button -->
+      <button id="printButton" class="btn btn--print" onclick="printDocument()">
+        <i class="fa fa-print"></i> Print Report
+      </button>
+
+      <!-- Table Section -->
+      <div class="table-container">
+        <table class="requests-table" id="requestsTable">
+          <thead class="requests-table__head">
+            <tr>
+              <th><i class="fa fa-id-card"></i> ID</th>
+              <th><i class="fa fa-user"></i> Recipient Name</th>
+              <th><i class="fa fa-calendar"></i> DOB</th>
+              <th><i class="fa fa-birthday-cake"></i> Age</th>
+              <th><i class="fa fa-tint"></i> Blood Type</th>
+              <th><i class="fa fa-cogs"></i> Units</th>
+              <th><i class="fa fa-venus-mars"></i> Gender</th>
+              <th><i class="fa fa-hospital-o"></i> Hospital</th>
+              <th><i class="fa fa-user-md"></i> Doctor</th>
+              <th><i class="fa fa-phone"></i> Contact</th>
+              <th><i class="fa fa-map-marker"></i> Location</th>
+              <th><i class="fa fa-exclamation-triangle"></i> Urgency</th>
+              <th><i class="fa fa-file-text"></i> Reason</th>
+              <th><i class="fa fa-user-circle"></i> Submitted By</th>
+              <th><i class="fa fa-envelope"></i> User Email</th>
+              <th><i class="fa fa-clock"></i> Timestamp</th>
+              <th><i class="fa fa-cogs"></i> Action</th>
+            </tr>
+          </thead>
+          <tbody class="requests-table__body" id="requestsBody">
+            <!-- Rows will be dynamically filled here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Denial Reason Modal (Hidden by Default) -->
+      <div class="modal hidden" id="denialModal">
+        <div class="modal__content">
+          <h2 class="modal__title">Select Denial Reasons</h2>
+          <p class="modal__description">Please select the reason for denying this request:</p>
+          <select class="modal__select" id="denialReasonSelect" multiple size="6">
+            <option value="Blood Type Incompatibility">Blood Type Incompatibility</option>
+            <option value="Insufficient Blood Supply">Insufficient Blood Supply</option>
+            <option value="Inadequate Testing or Documentation">Inadequate Testing or Documentation</option>
+            <option value="Risk of Transfusion Reactions">Risk of Transfusion Reactions</option>
+            <option value="Infection Concerns">Infection Concerns</option>
+            <option value="Medical Contraindications">Medical Contraindications</option>
+            <option value="Alternative Treatments">Alternative Treatments</option>
+            <option value="Ethical or Religious Reasons">Ethical or Religious Reasons</option>
+            <option value="Insurance/Finance Issues">Insurance/Finance Issues</option>
+            <option value="Other Reasons">Other Reasons</option>
+          </select>
+          <textarea class="modal__textarea" id="otherDenialReason" placeholder="If 'Other Reasons' is selected, please type your reason here (optional)."></textarea>
+          <button class="btn btn--submit" id="submitDenial">Submit Denial</button>
+          <button class="btn btn--cancel modal-close" id="cancelDenial">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        <button class="btn btn--pagination" id="prevPage">« Prev</button>
+        <span class="pagination__indicator" id="pageIndicator">Page 1</span>
+        <button class="btn btn--pagination" id="nextPage">Next »</button>
+      </div>
+
+      <!-- No Requests Message -->
+      <p class="no-requests-message hidden" id="noRequestsMessage">No requests available.</p>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+      <a href="demo.html" class="btn btn--footer"><i class="fas fa-plus-circle"></i> Make a Request</a>
+      <a href="requestList.html" class="btn btn--footer"><i class="fas fa-clock"></i> Pending Requests</a>
+      <a href="deniedRequests.html" class="btn btn--footer"><i class="fas fa-ban"></i> Denied Requests</a>
+      <a href="approvedRequests.html" class="btn btn--footer"><i class="fas fa-chart-bar"></i> Cashier Approval 💰☑</a>
+      <a href="approvedRequests1.html" class="btn btn--footer"><i class="fas fa-check-circle"></i> Approved Requests</a>
+      <a href="pesa.html" class="btn btn--footer"><i class="fas fa-check-circle"></i> Completed Requests</a>
+      <a href="karibu.html" class="btn btn--footer btn--back"><i class="fas fa-arrow-left"></i> Back to Main Page</a>
+    </footer>
+  </div>
+
+  <!-- JavaScript Files -->
+  <script src="denialModal.js" defer></script>
+  <script src="loadRequests.js" defer></script>
+  
+  
+  <script>
+ document.addEventListener("DOMContentLoaded", function() {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!user) {
+    window.location.href = "login.html"; // Redirect if not logged in
+    return;
+  }
+
+  // Define allowed pages per role
+  const rolePages = {
+    "Receptionist": ["karibu.html", "form.html"],
+    "Nurse": ["form.html", "karibu.html"],
+    "Blood Bank Technician": "all", // Unrestricted access
+    "Lab Manager (Doctor)": "all", // Unrestricted access
+    "Cashier": ["approvedRequests.html", "karibu.html"]
+  };
+
+  const currentPage = window.location.pathname.split("/").pop();
+  const allowedPages = rolePages[user.role] || [];
+
+  // Allow unrestricted access for Blood Bank Technician & Lab Manager
+  if (allowedPages !== "all" && !allowedPages.includes(currentPage)) {
+    alert("⚠️ Access Denied: You do not have permission to view this page.");
+    window.location.href = "karibu.html"; // Redirect to main dashboard
+  }
+
+  // Display user role info
+  const userRoleDisplay = document.getElementById("userRole");
+  if (userRoleDisplay) {
+    userRoleDisplay.textContent = `Logged in as: ${user.role}`;
+  }
+});
+  </script>
+</body>
+
+</html>

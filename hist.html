@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation History</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1>Donation History</h1>
+    <p>View and manage donation records</p>
+  </header>
+
+  <!-- Filters and Sorting -->
+  <section class="controls">
+    <form id="filterForm">
+      <div class="filter-group">
+        <label for="bloodGroupFilter">Blood Group:</label>
+        <select id="bloodGroupFilter">
+          <option value="">All</option>
+          <option value="A+">A+</option>
+          <option value="B+">B+</option>
+          <option value="O+">O+</option>
+          <option value="AB+">AB+</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="donorTypeFilter">Donor Type:</label>
+        <select id="donorTypeFilter">
+          <option value="">All</option>
+          <option value="Volunteer">Volunteer</option>
+          <option value="Replacement">Replacement</option>
+        </select>
+      </div>
+
+      <button type="button" id="filterButton" class="button">Filter</button>
+    </form>
+
+    <div class="search-sort">
+      <input type="text" id="unitNumberSearch" placeholder="Search by Unit Number">
+      <button type="button" id="searchButton" class="button">Search</button>
+      <button type="button" id="sortByDate" class="button">Sort by Date</button>
+    </div>
+  </section>
+
+  <!-- Donation History Table -->
+  <section class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Donor Name</th>
+          <th>Blood Group</th>
+          <th>Donation Date</th>
+          <th>Donation Type</th>
+          <th>Volume (mL)</th>
+          <th>Repeat?</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="donationTable">
+        <!-- Dynamic rows will be inserted here -->
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Blood Donation Management System</p>
+  </footer>
+
+  <script src="histo.js"></script>
+</body>
+</html>

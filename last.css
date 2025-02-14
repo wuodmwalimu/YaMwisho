@@ -1,0 +1,164 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #fff5f5; /* Light red background */
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+header {
+  background-color: #cc0000; /* Bold red */
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+main {
+  padding: 2rem;
+}
+
+#userHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#userHeader #welcomeMessage {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+#userHeader #logoutButton {
+  background-color: #cc0000; /* Red button */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+#userHeader #logoutButton:hover {
+  background-color: #990000; /* Darker red on hover */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+  border: 1px solid #ffcccc; /* Soft red border */
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #b30000; /* Dark red for headers */
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffe6e6; /* Light red for alternating rows */
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+tbody tr:hover {
+  background-color: #ff9999; /* Soft red hover effect */
+  color: black;
+  cursor: pointer;
+}
+
+#paginationControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+#paginationControls button {
+  background-color: #cc0000;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+#paginationControls button:hover {
+  background-color: #990000; /* Darker red on hover */
+}
+
+#paginationControls span {
+  font-size: 1rem;
+  color: #333;
+}
+
+#printButton {
+  background-color: #cc0000; /* Red button */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+#printButton:hover {
+  background-color: #990000; /* Darker red on hover */
+}
+
+#printSection {
+  margin-top: 2rem;
+}
+
+#printSection p {
+  font-size: 1rem;
+  color: #333;
+}
+
+footer {
+  background-color: #cc0000; /* Matching header red */
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+footer a:hover {
+  background-color: #990000;
+  color: white;
+}
+
+footer .back-btn {
+  background-color: #b30000;
+}
+
+footer .back-btn:hover {
+  background-color: #660000;
+}
